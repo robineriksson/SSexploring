@@ -108,6 +108,19 @@ dataSave <- function(data, filename, destination){
     write.csv(data,file = output)
 }
 
+##' distance
+##'
+##' Compute the euclidian distance between two vectors
+##'
+##' @param x vector 1
+##' @param y vector 2
+##' @return euclid. distance between x and y
+distance <- function(x, y){
+    distance <- (x-y)^2 %>%
+        sum %>%
+        sqrt
+}
+
 ##' main function
 ##'
 ##' Create 3 trajectories and save as csv file.
@@ -117,14 +130,17 @@ main <- function(plot = FALSE){
     theta1 = c(0.0075, 0.05, 0.085, 0.1)
     obs <- dataGenerate(theta1, threads = 1) %>%
         dataAggregate
+    d1 <- 0
     ## data 2
     theta2 = runif(4, 0.98, 1.02)*theta1
     sim1 <- dataGenerate(theta2, threads = 1) %>%
         dataAggregate
+    d2 <- distance(theta1, theta2)
     ## data 3
     theta3 = runif(4, 0.93, 1.07)*theta1
     sim2 <- dataGenerate(theta3, threads = 1) %>%
         dataAggregate
+    d3 <- distance(theta1, theta3)
 
     if(plot){
         plot(x=c(0,1500), y = c(0,20), type = "n")
@@ -135,7 +151,8 @@ main <- function(plot = FALSE){
 
     print("data generated")
     ## collect data in a list
-    data.list <- list(obs = obs, sim1 = sim1, sim2 = sim2)
+    data.list <- list(obs$time, obs$sample, sim1$sample, sim2$sample)
+    names(data.list) <- c("time", d1, d2, d3)
 
     ## save data as csv.
     filename = "genData.csv"

@@ -77,7 +77,7 @@ filename = "/home/rober323/Gits/SSexploring/DATA/genData.csv"
 fulldat = getData(filename)
 
 # melt the data frame
-dat = pd.melt(fulldat, id_vars="obs.time")
+dat = pd.melt(fulldat, id_vars="time")
 
 SS = extract_features(dat,
                       column_id="variable",
